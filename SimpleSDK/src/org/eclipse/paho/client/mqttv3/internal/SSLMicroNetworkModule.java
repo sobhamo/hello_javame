@@ -67,7 +67,7 @@ public class SSLMicroNetworkModule implements NetworkModule {
      */
     public void start() throws IOException, MqttException {
         final String methodName = "start";
-        System.out.println("Connect : " + uriForSocket);
+        
         try {
             log.fine(className,methodName, "252", new Object[] {uriForSocket});
             connection = (SocketConnection) Connector.open(uriForSocket);

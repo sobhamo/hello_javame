@@ -48,8 +48,9 @@ public class SampleApp extends MIDlet {
         String hostAddress = Config.SIMPLE_SECURE_HOST;
         int hostPort = Config.SIMPLE_SECURE_PORT;
         
+        Configuration configuration = new Configuration(hostAddress, hostPort, Config.SIMPLE_KEEP_ALIVE, Config.DEVICE_TOKEN, Config.DEVICE_TOKEN, null);
         simple = new Simple( Config.SIMPLE_SERVICE_NAME, Config.SIMPLE_DEVICE_NAME,
-                new Configuration(hostAddress, hostPort, Config.SIMPLE_KEEP_ALIVE, Config.DEVICE_TOKEN, Config.DEVICE_TOKEN, null),
+                configuration,
                 connectionListener, true);
         
         simple.tpSimpleConnect();
@@ -230,18 +231,19 @@ public class SampleApp extends MIDlet {
                             logInfo("RPC_SOFTWARE_UPDATE");
                         }else if(Define.RPC_FIRMWARE_UPGRADE.equals(rpcReq.method)){
                             logInfo("RPC_FIRMWARE_UPGRADE");
+                            
                             // DO FIRMWARE UPGRADE here...
                             
                              RPCResponse rsp = new RPCResponse();
                                 rsp.setCmd(simpleMessage.cmd);
                                 rsp.setCmdId(1);
                                 rsp.setJsonrpc(rpcReq.jsonrpc);
-                                rsp.setCmdId(1);
                                 rsp.setId(rpcReq.id);
                                 rsp.setResult(true);
                                 String rawResult = convertRawResult(rsp);
                                 simple.tpSimpleRawResult(rawResult, callback);
-                                
+								
+                            // ATCOM FINISHED
                             
                         }else if(Define.RPC_CLOCK_SYNC.equals(rpcReq.method)){
                             logInfo("RPC_CLOCK_SYNC");
@@ -250,7 +252,8 @@ public class SampleApp extends MIDlet {
                         }else if(Define.RPC_REMOTE.equals(rpcReq.method)){
                             logInfo("RPC_REMOTE");
                             // DO REMOTE here...
-
+                            
+                            // ATCOM FINISHED
                         }else if(Define.RPC_USER.equals(rpcReq.method)){
                             logInfo("RPC_USER");
                             
