@@ -20,6 +20,7 @@ public class Configuration {
     private String loginName;
     /** login password **/
     private String loginPassword;
+    /** automatic reconnect **/
     private boolean automaticReconnect = true;
 
     /**
@@ -81,6 +82,9 @@ public class Configuration {
         return automaticReconnect;
     }
 
+    public void setAutomaticReconnect(boolean automaticReconnect){
+        this.automaticReconnect = automaticReconnect;
+    }
     
     
     /**
