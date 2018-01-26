@@ -15,7 +15,6 @@ import org.json.me.JSONObject;
 public class SimpleMessage {
     String cmd;
     int cmdId;
-    String mode;
     RPCRequest rpcReq;
     JSONObject attribute;
     
@@ -39,9 +38,7 @@ public class SimpleMessage {
         simpleMessage.cmd = rootObject.getString("cmd");
         simpleMessage.cmdId = rootObject.getInt("cmdId");
         
-        if(rootObject.has("rpcReq")){
-            simpleMessage.mode = rootObject.getString("rpcMode");
-            
+        if(rootObject.has("rpcReq")){           
             JSONObject rpcReq =  rootObject.getJSONObject("rpcReq");
             simpleMessage.rpcReq = new RPCRequest();
             simpleMessage.rpcReq.jsonrpc = rpcReq.getString("jsonrpc");

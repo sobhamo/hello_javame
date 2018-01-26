@@ -73,6 +73,7 @@ public class Simple {
         this.mqttClient = new MQTTClient.Builder()
                 .baseUrl(configuration.getServerAddress() + ":" + configuration.getServerPort())
                 .keepAlive(configuration.getKeepAlive())
+                .automaticReconnect(configuration.getAutomaticReconnect())
                 .clientId(configuration.getClientId())
                 .userName(configuration.getLoginName())
                 .password(configuration.getLoginPassword())
@@ -137,7 +138,6 @@ public class Simple {
             return false;
         }
         
-        // TODO : addProperty to put !!
         try {
             if(element instanceof BooleanElement){
                 jsonObject.put(((BooleanElement)element).name, ((BooleanElement)element).value);
@@ -282,26 +282,33 @@ public class Simple {
             JSONObject resultObject;
             JSONObject errorObject;
             
+            addElement(jsonObject, new StringElement(Define.RESULT, response.getResult()?Define.SUCCESS:Define.FAIL));
             addElement(jsonObject, response.getCmd());
-            addElement(jsonObject, response.getCmdId());
+            addElement(jsonObject, response.getCmdId());            
             
             addElement(rpcRspObject, response.getJsonrpc());
             addElement(rpcRspObject, response.getId());
             
-            if(response.getErrorCode() != null) {
-                errorObject = new JSONObject();
-                addElement(errorObject, response.getErrorCode());
-                addElement(errorObject, response.getErrorMessage());
-                
-                addElement(jsonObject, new StringElement(Define.RESULT, Define.FAIL));
-                rpcRspObject.put(Define.ERROR, errorObject);
-            } else {
+            ArrayElement arrayElement = response.getResultArray();
+            if(null != arrayElement){
+                 addElement(jsonObject, new StringElement(Define.RESULT, Define.SUCCESS));
                 resultObject = new JSONObject();
-                addElement(resultObject, response.getResult());
-                
-                addElement(jsonObject, new StringElement(Define.RESULT, Define.SUCCESS));
-                rpcRspObject.put(Define.RESULT, resultObject);
+                    
+                int size = arrayElement.elements.size();
+                for(int index = 0; index < size ; index++){
+                    Object element = arrayElement.elements.elementAt(index);
+                    boolean result = addElement(resultObject, element);
+                    if (result == false) {
+                        throw new Exception("Bad element!");
+                    }
+                }
+                if(response.getResult()){
+                    rpcRspObject.put(Define.RESULT, resultObject);
+                }else{
+                    rpcRspObject.put(Define.ERROR, resultObject);
+                }
             }
+            
             jsonObject.put(Define.RPC_RSP, rpcRspObject);
             String payload = jsonObject.toString();
             Util.log("\n" + topic + "\n" + payload);
@@ -312,7 +319,7 @@ public class Simple {
         }
     }
     
-    public void tpSimpleRawResult(String   response, final ResultListener listener) {
+    public void tpSimpleRawResult(String response, final ResultListener listener) {
         try {
             //String topic = String.format("v1/dev/%s/%s/up", serviceName, deviceName);
             String topic = "v1/dev/"+serviceName+"/"+deviceName+"/up";

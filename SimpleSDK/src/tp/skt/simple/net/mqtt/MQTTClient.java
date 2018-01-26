@@ -34,6 +34,7 @@ public class MQTTClient {
     private String password;
     private String version;
     private int keepAlive;
+    private boolean automaticReconnect = true;
     
     /** MqttAndroidClient **/
     private  MqttClient mqttClient;
@@ -52,7 +53,7 @@ public class MQTTClient {
      * @param password
      * @param version  if value is null, default value is 1.0
      */
-    MQTTClient(String baseUrl, String clientID, String userName, String password, String version, String[] subscribeTopics, int keepAlive) {
+    MQTTClient(String baseUrl, String clientID, String userName, String password, String version, String[] subscribeTopics, int keepAlive, boolean automaticReconnect) {
         this.baseUrl = baseUrl;
         this.clientID = clientID;
         this.userName = userName;
@@ -60,6 +61,7 @@ public class MQTTClient {
         this.version = (version == null ? Define.VERSION : version);
         this.subscribeTopics = subscribeTopics;
         this.keepAlive = keepAlive;
+        this.automaticReconnect = automaticReconnect;
     }
     
     /**
@@ -68,13 +70,10 @@ public class MQTTClient {
      */
     public void disconnect() {
         if (mqttClient != null && mqttClient.isConnected()) {
-            // TODO : change code
-            // mqttClient.disconnect(null, null);
             try {
                 mqttClient.disconnect();
             } catch (MqttException ex) {
                 Log.print(MQTTClient.class.getName(), ex.toString());
-                //Logger.getLogger(MQTTClient.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -86,12 +85,9 @@ public class MQTTClient {
     public void destroy() {
         if(mqttClient != null) {
             try {
-                // TODO : Check, code
-//            mqttClient.unregisterResources();
-mqttClient.close();
+                mqttClient.close();
             } catch (MqttException ex) {
                 Log.print(MQTTClient.class.getName(), ex.toString());
-                //Logger.getLogger(MQTTClient.class.getName()).log(Level.SEVERE, null, ex);
             }
             Util.log("destroy");
         }
@@ -152,7 +148,7 @@ mqttClient.close();
             
             final MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
             mqttConnectOptions.setCleanSession(false);
-            mqttConnectOptions.setAutomaticReconnect(true);
+            mqttConnectOptions.setAutomaticReconnect(automaticReconnect);
             
             if (this.userName != null) {
                 Util.log("userName : " + this.userName);
@@ -296,6 +292,7 @@ mqttClient.close();
         private String password;
         private String version;
         private String[] subscribeTopics;
+        private boolean automaticReconnect = true;
         
         
         /**
@@ -326,6 +323,14 @@ mqttClient.close();
          */
         public Builder keepAlive(int keepAlive) {
             this.keepAlive = keepAlive;
+            return this;
+        }
+        
+        /**
+         * AutomaticReconnect
+         */
+        public Builder automaticReconnect(boolean automaticReconnect) {
+            this.automaticReconnect = automaticReconnect;
             return this;
         }
         
@@ -411,7 +416,7 @@ return this;
          */
         public MQTTClient build() {
             Util.checkNull(baseUrl, "baseUrl = null");
-            return new MQTTClient( baseUrl, clientId, userName, password, version, subscribeTopics, keepAlive);
+            return new MQTTClient( baseUrl, clientId, userName, password, version, subscribeTopics, keepAlive, automaticReconnect);
         }
     }
 }

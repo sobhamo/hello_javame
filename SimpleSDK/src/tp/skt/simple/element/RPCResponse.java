@@ -22,11 +22,9 @@ public class RPCResponse {
     /** request ID from server **/
     private LongElement id;
     /** control result **/
-    private StringElement result;
-    /** error code **/
-    private IntElement errorCode;
-    /** error message **/
-    private StringElement errorMessage;
+    private boolean result;
+    /** result body(ArrayElement) **/
+    private ArrayElement resultArray;   
 
 
     /**
@@ -48,14 +46,13 @@ public class RPCResponse {
      * @param errorCode
      * @param errorMessage
      */
-    public RPCResponse(String cmd, int cmdId, String jsonrpc, long id, String result, int errorCode, String errorMessage) {
+    public RPCResponse(String cmd, int cmdId, String jsonrpc, long id, boolean result, ArrayElement resultArray) {
         this.setCmd(cmd);
         this.setCmdId(cmdId);
         this.setJsonrpc(jsonrpc);
         this.setId(id);
         this.setResult(result);
-        this.setErrorCode(errorCode);
-        this.setErrorMessage(errorMessage);
+        this.setResultArray(resultArray);
     }
 
     /**
@@ -140,7 +137,7 @@ public class RPCResponse {
      *
      * @return
      */
-    public StringElement getResult() {
+    public boolean getResult() {
         return result;
     }
 
@@ -149,47 +146,26 @@ public class RPCResponse {
      *
      * @param result
      */
-    public void setResult(String result) {
-        if(TextUtils.isEmpty(result) == false) {
-            this.result = new StringElement(Define.STATUS, result);
-        }
+    public void setResult(boolean result) {
+        this.result = result;
     }
-
+    
     /**
+     * setResultArray
      *
-     *
-     * @return
      */
-    public IntElement getErrorCode() {
-        return errorCode;
+    public void setResultArray(ArrayElement resultArray) {
+        this.resultArray = resultArray;
     }
-
+    
+    
     /**
+     * getResultArray
      *
-     *
-     * @param errorCode
      */
-    public void setErrorCode(int errorCode) {
-        this.errorCode = new IntElement(Define.CODE, errorCode);
-    }
-
-    /**
-     *
-     *
-     * @return
-     */
-    public StringElement getErrorMessage() {
-        return errorMessage;
-    }
-
-    /**
-     *
-     *
-     * @param errorMessage
-     */
-    public void setErrorMessage(String errorMessage) {
-        if(TextUtils.isEmpty(errorMessage) == false) {
-            this.errorMessage = new StringElement(Define.MESSAGE, errorMessage);
-        }
+    public ArrayElement getResultArray(){
+        return this.resultArray;
     }
 }
+
+
