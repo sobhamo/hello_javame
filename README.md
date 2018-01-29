@@ -234,6 +234,11 @@ __tpSimpleSubscribe__ | 디바이스정보를 모니터링 한다.
   <br/><img src="images/javame_run.png"/>
 - Emulator 실행화면
     <br/><img src="images/javame_emulator.png"/>
+- 대시보드 화면
+    <br/><img src="images/javame_dashboard_full.png"/>
+- 실행 로그
+    [Simple_JavaME.log](./Simple_JavaME.log)
+    
 
 Copyright (c) 2017 SK Telecom Co., Ltd. All Rights Reserved.
 Distributed under Apache License Version 2.0.
