@@ -11,6 +11,10 @@ import tp.skt.simple.common.Util;
 public class Log {
     private Log(){}
     
+    static public void printInfo(String message){
+        print("[INFO] :", message);
+    }
+    
     static public void print(String tag, String message){
          Util.log(tag + " "+message);
     }

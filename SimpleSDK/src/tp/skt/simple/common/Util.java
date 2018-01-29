@@ -17,7 +17,7 @@ public class Util {
      */
     public static void log(String message) {
         if(Util.logEnabled == true) {
-            System.out.println("TP_SIMPLE_SDK, [INFO] : "+ message);
+            System.out.println("TP_SIMPLE_SDK, "+ message);
         }
     }
 
