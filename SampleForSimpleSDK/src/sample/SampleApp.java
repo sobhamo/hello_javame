@@ -35,7 +35,6 @@ import tp.skt.simple.element.StringElement;
  * Written 2017, by SK Telecom
  */
 public class SampleApp extends MIDlet {
-    private final static String TAG_INFO = "[INFO] :";
     private Simple simple;
     
     private final DataFormat format = DataFormat.FORMAT_JSON;
@@ -121,12 +120,16 @@ public class SampleApp extends MIDlet {
     ResultListener callback = new ResultListener() {
         
         public void onResponse(int response) {
-            errorCode = response;
+            errorCode = 0;
+            
+            Log.print("____________________________\n\n\n");
         }
         
         
         public void onFailure(int code, String message) {
             errorCode = code;
+            
+            Log.print("____________________________\n\n\n");
         }
     };
     
@@ -213,56 +216,79 @@ public class SampleApp extends MIDlet {
                                         
                     if(null != simpleMessage.rpcReq){
                         RPCRequest rpcReq = simpleMessage.rpcReq;
+                        if(null != rpcReq.method){
+                            Log.print("\n\n\n");
+                            logInfo("### " + rpcReq.method.toUpperCase() + " --------------START[[");
+                        }
                         if(Define.RPC_RESET.equals(rpcReq.method)){
-                            logInfo("RPC_RESET");
+                            
                         }else if(Define.RPC_REBOOT.equals(rpcReq.method)){
-                            logInfo("RPC_REBOOT");
+                            
                         }else if(Define.RPC_UPLOAD.equals(rpcReq.method)){
-                            logInfo("RPC_UPLOAD");
+
                         }else if(Define.RPC_DOWNLOAD.equals(rpcReq.method)){
-                            logInfo("RPC_DOWNLOAD");
+
                         }else if(Define.RPC_SOFTWARE_INSTALL.equals(rpcReq.method)){
-                            logInfo("RPC_SOFTWARE_INSTALL");
+
                         }else if(Define.RPC_SOFTWARE_REINSTALL.equals(rpcReq.method)){
-                            logInfo("RPC_SOFTWARE_REINSTALL");
+
                         }else if(Define.RPC_SOFTWARE_REUNINSTALL.equals(rpcReq.method)){
-                            logInfo("RPC_SOFTWARE_REUNINSTALL");
+
                         }else if(Define.RPC_SOFTWARE_UPDATE.equals(rpcReq.method)){
-                            logInfo("RPC_SOFTWARE_UPDATE");
+
                         }else if(Define.RPC_FIRMWARE_UPGRADE.equals(rpcReq.method)){
-                            logInfo("RPC_FIRMWARE_UPGRADE");
                             
                             // DO FIRMWARE UPGRADE here...
                             
-                             RPCResponse rsp = new RPCResponse();
-                                rsp.setCmd(simpleMessage.cmd);
-                                rsp.setCmdId(1);
-                                rsp.setJsonrpc(rpcReq.jsonrpc);
-                                rsp.setId(rpcReq.id);
-                                rsp.setResult(true);
-                                String rawResult = convertRawResult(rsp);
-                                simple.tpSimpleRawResult(rawResult, callback);
+                            RPCResponse rsp = new RPCResponse();
+                               rsp.setCmd(simpleMessage.cmd);
+                               rsp.setCmdId(1);
+                               rsp.setJsonrpc(rpcReq.jsonrpc);
+                               rsp.setId(rpcReq.id);
+                               rsp.setResult(true);
+                               
+                               ArrayElement arrayElement = new ArrayElement();
+                               arrayElement.addStringElement("state", "SUCCESS");
+                               rsp.setResultArray(arrayElement);
+                               
+                               String rawResult = convertRawResult(rsp);
+                               simple.tpSimpleRawResult(rawResult, callback);
 								
                             // ATCOM FINISHED
-                            
+
                         }else if(Define.RPC_CLOCK_SYNC.equals(rpcReq.method)){
-                            logInfo("RPC_CLOCK_SYNC");
+
                         }else if(Define.RPC_SIGNAL_STATUS_REPORT.equals(rpcReq.method)){
-                            logInfo("RPC_SIGNAL_STATUS_REPORT");
+
                         }else if(Define.RPC_REMOTE.equals(rpcReq.method)){
-                            logInfo("RPC_REMOTE");
+
                             // DO REMOTE here...
+                            
+                            RPCResponse rsp = new RPCResponse();
+                               rsp.setCmd(simpleMessage.cmd);
+                               rsp.setCmdId(1);
+                               rsp.setJsonrpc(rpcReq.jsonrpc);
+                               rsp.setId(rpcReq.id);
+                               rsp.setResult(true);
+                               
+                               ArrayElement arrayElement = new ArrayElement();
+                               arrayElement.addStringElement("state", "SUCCESS");
+                               rsp.setResultArray(arrayElement);
+                               
+                               String rawResult = convertRawResult(rsp);
+                               simple.tpSimpleRawResult(rawResult, callback);
                             
                             // ATCOM FINISHED
                         }else if(Define.RPC_USER.equals(rpcReq.method)){
-                            logInfo("RPC_USER");
+
                             
                             if(rpcReq.params.getJSONObject(0).has("led")){
                                 int control = rpcReq.params.getJSONObject(0).getInt("led");
                                 logInfo("rpc : " + rpcReq.jsonrpc+", id : "+rpcReq.id+"cmd : "+  control);
                                 
                                 // DO CONTROL here...
-                                boolean result = true;                          
+                                
+                                boolean result = true;
                                 
                                 RPCResponse rsp = new RPCResponse();
                                 rsp.setCmd(simpleMessage.cmd);
@@ -274,34 +300,46 @@ public class SampleApp extends MIDlet {
                                 if(result){
                                     ArrayElement arrayElement = new ArrayElement();
                                     arrayElement.addNumberElement("led", 7);
-                                    
                                     rsp.setResultArray(arrayElement);
                                 }else{
-                                     ArrayElement arrayElement = new ArrayElement();
+                                    ArrayElement arrayElement = new ArrayElement();
                                     arrayElement.addStringElement("message", "wrong parameters");
                                     rsp.setResultArray(arrayElement);
+
                                 }
                                 String rawResult = convertRawResult(rsp);
                                 simple.tpSimpleRawResult(rawResult, callback);
 //                                simple.tpSimpleResult(rsp, callback);
                             }
                         }
+                        
+                        
+                        if(null != rpcReq.method){
+                            logInfo("### " + rpcReq.method.toUpperCase() + " --------------]]END\n\n\n");
+                        }
                     }else{
                         if("setAttribute".equals(simpleMessage.cmd) && null != simpleMessage.attribute){
+                            Log.print("\n\n\n");
+                            logInfo("### " + simpleMessage.cmd.toUpperCase() + " --------------START[[");
+                            
                             
                             if(format == DataFormat.FORMAT_JSON){
                                 int led = simpleMessage.attribute.getInt("led");
                                 logInfo("led :" +  led + ", " + simpleMessage.cmdId);
-                                
+                                                                
                                 ArrayElement arrayElement = new ArrayElement();
                                 arrayElement.addNumberElement("led", led);
+                                
                                 simple.tpSimpleAttribute(arrayElement, callback);
+
                                 
                             }else{ //  if(format == DataFormat.FORMAT_CSV)
                                 int led = simpleMessage.attribute.getInt("led");
                                 String data = ",,,,," + led;
                                 simple.tpSimpleRawAttribute(data, format, callback);
                             }
+                            
+                            logInfo("### " + simpleMessage.cmd.toUpperCase() + " --------------]]END\n\n\n");
                         }
                     }
                 }
@@ -381,6 +419,6 @@ public class SampleApp extends MIDlet {
     }
     
     private void logInfo(String message){
-        Log.print(TAG_INFO, message);
+        Log.printInfo(message);
     }
 }
