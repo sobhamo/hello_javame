@@ -273,6 +273,8 @@ public class SampleApp extends MIDlet {
                             
                             // DO FIRMWARE UPGRADE here...
                             
+                            logATCmd("AT+SKTPRES=1" + "," + rpcReq.method + "," + rpcReq.id + ",0,{\"status\":\"SUCCESS\"}");
+                            
                             RPCResponse rsp = new RPCResponse();
                                rsp.setCmd(simpleMessage.cmd);
                                rsp.setCmdId(1);
@@ -336,7 +338,7 @@ public class SampleApp extends MIDlet {
                                     rsp.setResultArray(arrayElement);
                                     
                                     String successBody = "{\"led\":7}";
-                                    logATCmd("AT+SKTPRES=1" + "," + rpcReq.id + ",0," +  successBody);
+                                    logATCmd("AT+SKTPRES=1" + "," + rpcReq.method + "," + rpcReq.id + ",0," +  successBody);
 										
                                 }else{
                                     ArrayElement arrayElement = new ArrayElement();
@@ -344,7 +346,7 @@ public class SampleApp extends MIDlet {
                                     rsp.setResultArray(arrayElement);
 
                                     String errorBody = "{\"message\":\"wrong parameters\"}";
-                                    logATCmd("AT+SKTPRES=1" + "," + rpcReq.id + ",1," +  errorBody);
+                                    logATCmd("AT+SKTPRES=1" + "," + rpcReq.method + "," + rpcReq.id + ",1," +  errorBody);
                                 }
                                 String rawResult = convertRawResult(rsp);
                                 simple.tpSimpleRawResult(rawResult, callback);
