@@ -227,8 +227,6 @@ public class SampleApp extends MIDlet {
         
         public void onDelivered() {
             logInfo("onDelivered");
-            
-            
         }
         
         public void onMessageReceived(String topic, String payload) {
@@ -242,10 +240,9 @@ public class SampleApp extends MIDlet {
                         logInfo("onMessageReceived result : " + simpleMessage.result);
                         return;
                     }
-                    
+                                        
                     if(null != simpleMessage.rpcReq){
                         RPCRequest rpcReq = simpleMessage.rpcReq;
-                        
                         if(null != rpcReq.method){
                             Log.print("\n\n\n");
                             logInfo("### " + rpcReq.method.toUpperCase() + " --------------START[[");
@@ -283,7 +280,7 @@ public class SampleApp extends MIDlet {
                                rsp.setResult(true);
                                
                                ArrayElement arrayElement = new ArrayElement();
-                               arrayElement.addStringElement("state", "SUCCESS");
+                               arrayElement.addStringElement("status", "SUCCESS");
                                rsp.setResultArray(arrayElement);
                                
                                String rawResult = convertRawResult(rsp);
@@ -307,7 +304,7 @@ public class SampleApp extends MIDlet {
                                rsp.setResult(true);
                                
                                ArrayElement arrayElement = new ArrayElement();
-                               arrayElement.addStringElement("state", "SUCCESS");
+                               arrayElement.addStringElement("status", "SUCCESS");
                                rsp.setResultArray(arrayElement);
                                
                                String rawResult = convertRawResult(rsp);
@@ -323,13 +320,16 @@ public class SampleApp extends MIDlet {
                                 
                                 // DO CONTROL here...
                                 
-                                boolean result = true;
+                                boolean result = false;
+                                if(0 <= control && control <=10)
+                                    result = true;
+                                else 
+                                    result = false;
                                 
                                 RPCResponse rsp = new RPCResponse();
                                 rsp.setCmd(simpleMessage.cmd);
                                 rsp.setCmdId(1);
                                 rsp.setJsonrpc(rpcReq.jsonrpc);
-                                rsp.setCmdId(1);
                                 rsp.setId(rpcReq.id);
                                 rsp.setResult(result);
                                 if(result){
@@ -341,13 +341,12 @@ public class SampleApp extends MIDlet {
                                     logATCmd("AT+SKTPRES=1" + "," + rpcReq.method + "," + rpcReq.id + ",0," +  successBody);
 										
                                 }else{
-                                    ArrayElement arrayElement = new ArrayElement();
-                                    arrayElement.addStringElement("message", "wrong parameters");
-                                    rsp.setResultArray(arrayElement);
+                                    rsp.setError(111, "wrong parameters");
 
-                                    String errorBody = "{\"message\":\"wrong parameters\"}";
+                                    String errorBody = "{\"code\":111, \"message\":\"wrong parameters\"}";
                                     logATCmd("AT+SKTPRES=1" + "," + rpcReq.method + "," + rpcReq.id + ",1," +  errorBody);
                                 }
+                                
                                 String rawResult = convertRawResult(rsp);
                                 simple.tpSimpleRawResult(rawResult, callback);
 //                                simple.tpSimpleResult(rsp, callback);
@@ -360,7 +359,6 @@ public class SampleApp extends MIDlet {
                         if(null != rpcReq.method){
                             logInfo("### " + rpcReq.method.toUpperCase() + " --------------]]END\n\n\n");
                         }
-
                     }else{
                         if("setAttribute".equals(simpleMessage.cmd) && null != simpleMessage.attribute){
                             Log.print("\n\n\n");
@@ -411,7 +409,6 @@ public class SampleApp extends MIDlet {
             
             ArrayElement arrayElement = response.getResultArray();
             if(null != arrayElement){
-                 addElement(jsonObject, new StringElement(tp.skt.simple.common.Define.RESULT, tp.skt.simple.common.Define.SUCCESS));
                 resultObject = new JSONObject();
                     
                 int size = arrayElement.elements.size();
