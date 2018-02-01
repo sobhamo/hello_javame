@@ -298,7 +298,6 @@ public class SampleApp extends MIDlet {
                                 rsp.setCmd(simpleMessage.cmd);
                                 rsp.setCmdId(1);
                                 rsp.setJsonrpc(rpcReq.jsonrpc);
-                                rsp.setCmdId(1);
                                 rsp.setId(rpcReq.id);
                                 rsp.setResult(result);
                                 if(result){
@@ -368,7 +367,6 @@ public class SampleApp extends MIDlet {
             
             ArrayElement arrayElement = response.getResultArray();
             if(null != arrayElement){
-                 addElement(jsonObject, new StringElement(tp.skt.simple.common.Define.RESULT, tp.skt.simple.common.Define.SUCCESS));
                 resultObject = new JSONObject();
                     
                 int size = arrayElement.elements.size();
