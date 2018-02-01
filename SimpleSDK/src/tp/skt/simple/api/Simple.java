@@ -291,9 +291,8 @@ public class Simple {
             
             ArrayElement arrayElement = response.getResultArray();
             if(null != arrayElement){
-                 addElement(jsonObject, new StringElement(Define.RESULT, Define.SUCCESS));
                 resultObject = new JSONObject();
-                    
+                
                 int size = arrayElement.elements.size();
                 for(int index = 0; index < size ; index++){
                     Object element = arrayElement.elements.elementAt(index);

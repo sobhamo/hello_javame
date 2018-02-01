@@ -248,7 +248,7 @@ public class SampleApp extends MIDlet {
                                rsp.setResult(true);
                                
                                ArrayElement arrayElement = new ArrayElement();
-                               arrayElement.addStringElement("state", "SUCCESS");
+                               arrayElement.addStringElement("status", "SUCCESS");
                                rsp.setResultArray(arrayElement);
                                
                                String rawResult = convertRawResult(rsp);
@@ -272,7 +272,7 @@ public class SampleApp extends MIDlet {
                                rsp.setResult(true);
                                
                                ArrayElement arrayElement = new ArrayElement();
-                               arrayElement.addStringElement("state", "SUCCESS");
+                               arrayElement.addStringElement("status", "SUCCESS");
                                rsp.setResultArray(arrayElement);
                                
                                String rawResult = convertRawResult(rsp);
@@ -288,7 +288,11 @@ public class SampleApp extends MIDlet {
                                 
                                 // DO CONTROL here...
                                 
-                                boolean result = true;
+                                boolean result = false;
+                                if(0 <= control && control <=10)
+                                    result = true;
+                                else 
+                                    result = false;
                                 
                                 RPCResponse rsp = new RPCResponse();
                                 rsp.setCmd(simpleMessage.cmd);
@@ -301,12 +305,10 @@ public class SampleApp extends MIDlet {
                                     ArrayElement arrayElement = new ArrayElement();
                                     arrayElement.addNumberElement("led", 7);
                                     rsp.setResultArray(arrayElement);
-                                }else{
-                                    ArrayElement arrayElement = new ArrayElement();
-                                    arrayElement.addStringElement("message", "wrong parameters");
-                                    rsp.setResultArray(arrayElement);
-
+                                }else{                                    
+                                    rsp.setError(111, "wrong parameters");
                                 }
+                                
                                 String rawResult = convertRawResult(rsp);
                                 simple.tpSimpleRawResult(rawResult, callback);
 //                                simple.tpSimpleResult(rsp, callback);

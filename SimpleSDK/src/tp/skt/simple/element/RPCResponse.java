@@ -166,6 +166,16 @@ public class RPCResponse {
     public ArrayElement getResultArray(){
         return this.resultArray;
     }
+    
+    public void setError(int code, String message){
+        if(resultArray == null){
+            resultArray = new ArrayElement();
+        }else{
+            resultArray.elements.removeAllElements();
+        }
+        resultArray.addNumberElement("code", code);
+        resultArray.addStringElement("message", message);
+    }
 }
 
 
